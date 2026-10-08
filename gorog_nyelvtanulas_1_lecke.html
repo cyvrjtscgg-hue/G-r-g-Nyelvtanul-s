@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Görög — 1. lecke</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f7f7fb;color:#17171c}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:18px 18px 28px;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:12px}.back{border:0;background:white;border-radius:14px;width:42px;height:42px;font-size:22px;box-shadow:0 2px 10px #00000010}
+.progress{height:10px;background:#e7e7ee;border-radius:20px;flex:1;overflow:hidden}.bar{height:100%;width:18%;background:#58c87a;border-radius:20px}
+.stats{display:flex;justify-content:space-between;margin:16px 2px 6px;font-weight:700}
+.card{background:white;border-radius:24px;padding:28px 22px;margin-top:18px;box-shadow:0 6px 22px #0000000d;text-align:center}
+.tag{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#777;margin-bottom:16px}
+.greek{font-size:38px;font-weight:800;margin:8px 0}.pron{color:#777;font-size:16px}
+.answers{display:grid;gap:12px;margin-top:22px}.answer{border:2px solid #dedee7;background:white;border-radius:16px;padding:16px;font-size:17px;font-weight:700;text-align:left;cursor:pointer}.answer:active{transform:scale(.99)}.answer.correct{border-color:#4acb73;background:#effbf3}.answer.wrong{border-color:#ef6666;background:#fff1f1}
+.feedback{min-height:28px;margin-top:16px;font-weight:800}.next{display:none;margin-top:12px;width:100%;border:0;border-radius:16px;padding:16px;background:#58c87a;color:white;font-size:17px;font-weight:800}
+.listen{border:0;background:#f0f2f7;border-radius:14px;padding:10px 15px;font-weight:700;cursor:pointer}
+.footer{margin-top:auto;text-align:center;color:#888;font-size:13px;padding-top:20px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><button class="back">‹</button><div class="progress"><div class="bar" id="bar"></div></div></div>
+  <div class="stats"><span id="xp">⭐ 0 XP</span><span>❤️❤️❤️❤️❤️</span></div>
+  <div class="card">
+    <div class="tag">1. lecke · Köszönések</div>
+    <div>Mit jelent?</div>
+    <div class="greek">Γεια σου!</div>
+    <div class="pron">„já szu”</div>
+    <div style="margin-top:16px"><button class="listen" id="listen">🔊 Meghallgatom</button></div>
+    <div class="answers">
+      <button class="answer" data-ok="0">Jó éjszakát</button>
+      <button class="answer" data-ok="1">Szia!</button>
+      <button class="answer" data-ok="0">Köszönöm</button>
+      <button class="answer" data-ok="0">Jó reggelt</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next" id="next">Tovább →</button>
+  </div>
+  <div class="footer">🇬🇷 Görög nyelvtanulás · 1. pálya</div>
+</div>
+<script>
+let xp=0;
+const answers=[...document.querySelectorAll('.answer')], fb=document.getElementById('feedback'), next=document.getElementById('next');
+answers.forEach(a=>a.onclick=()=>{
+  if(next.style.display==='block')return;
+  if(a.dataset.ok==='1'){
+    a.classList.add('correct'); fb.textContent='🎉 Helyes! +10 XP'; xp+=10; document.getElementById('xp').textContent='⭐ '+xp+' XP'; next.style.display='block';
+  }else{
+    a.classList.add('wrong'); fb.textContent='❌ Majdnem! Próbáld újra.';
+  }
+});
+document.getElementById('listen').onclick=()=>{
+  if('speechSynthesis' in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance('Γεια σου');u.lang='el-GR';u.rate=.78;speechSynthesis.speak(u)}
+  else fb.textContent='A böngésző nem támogatja a hangot.';
+};
+next.onclick=()=>{fb.textContent=''; next.style.display='none'; answers.forEach(a=>a.classList.remove('correct','wrong')); document.querySelector('.greek').textContent='Καλημέρα!';document.querySelector('.pron').textContent='„kaliméra”';document.querySelector('.tag').textContent='2. lecke · Köszönések';document.querySelector('.answers')[0].textContent='Szia!';document.querySelector('.answers')[1].textContent='Jó reggelt!';document.querySelector('.answers')[1].dataset.ok='1';document.querySelector('.answers')[2].textContent='Köszönöm';document.querySelector('.answers')[3].textContent='Jó éjszakát';document.getElementById('bar').style.width='36%'};
+</script>
+</body>
+</html>
